@@ -36,6 +36,7 @@ public class TicTacToe {
             userInput = scanner.nextLine();
 
             if (!userInput.matches("[1-9]")) {
+                printBoard(board);
                 System.out.println("That move is invalid! Please choose a number between 1 and 9.");
                 continue;
             }
@@ -73,6 +74,7 @@ public class TicTacToe {
                 }
                 break;
             } else {
+                printBoard(board);
                 System.out.println(userInput + " is not a valid move. Cell is already taken!");
             }
         }
@@ -172,7 +174,7 @@ public class TicTacToe {
                 System.out.print("Please choose a game mode:\n \n(1) Human vs. human game.\n(2) Human vs. computer game.\n");
                 String input  = scanner.nextLine();
 
-                if (input.matches("-?\\d+")) {
+                if (input.matches("[1-2]")) {
                     int value = Integer.parseInt(input);
                     if (value == 1 || value == 2) {
                         gameModeInput = value;
@@ -218,7 +220,7 @@ public class TicTacToe {
                 System.out.print("Would you like to play again?\n(1) Yes \n(2) No\n");
                 String input  = scanner.nextLine();
 
-                if (input.matches("-?\\d+")) {
+                if (input.matches("[1-2]")){
                     int value = Integer.parseInt(input);
                     if (value == 1 || value == 2) {
                         continueInput = value;
