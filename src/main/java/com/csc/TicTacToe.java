@@ -164,25 +164,26 @@ public class TicTacToe {
 
     public static void gameLoop(char[][] board, Scanner scanner){
         boolean isUserDone = false;
+        Integer gameModeInput = 0;
         
         System.out.println("Welcome to Tic-Tac-Toe!");
 
         while(!isUserDone) {
-            Integer gameModeInput = 0;
+            if (gameModeInput == 0) {
+                while(gameModeInput != 1 && gameModeInput != 2) {
+                    System.out.print("Please choose a game mode:\n \n(1) Human vs. human game.\n(2) Human vs. computer game.\n");
+                    String input  = scanner.nextLine();
 
-            while(gameModeInput != 1 && gameModeInput != 2) {
-                System.out.print("Please choose a game mode:\n \n(1) Human vs. human game.\n(2) Human vs. computer game.\n");
-                String input  = scanner.nextLine();
-
-                if (input.matches("[1-2]")) {
-                    int value = Integer.parseInt(input);
-                    if (value == 1 || value == 2) {
-                        gameModeInput = value;
+                    if (input.matches("[1-2]")) {
+                        int value = Integer.parseInt(input);
+                        if (value == 1 || value == 2) {
+                            gameModeInput = value;
+                        } else {
+                            System.out.println("That is not a valid input! Please enter 1 or 2. ");
+                        }
                     } else {
-                        System.out.println("That is not a valid input! Please enter 1 or 2. ");
+                        System.out.println("Invalid input! Please enter a number.");
                     }
-                } else {
-                    System.out.println("Invalid input! Please enter a number.");
                 }
             }
 
