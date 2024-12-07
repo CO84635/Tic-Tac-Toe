@@ -1,18 +1,42 @@
 package com.csc;
 
 import java.util.Scanner;
+import java.util.Arrays;
 import java.util.Random;
 
 import static java.lang.Character.isDigit;
 
 public class TicTacToe {
+    private static void replaceMarks(char[][] board, char playerOneMark, char playerTwoMark) {
+        for (int i = 0; i < board.length; i++){
+            for (int j = 0; j < board[i].length; j++) {
+                if (board[i][j] == 'X') {
+                    board[i][j] = playerOneMark;
+                } else if (board[i][j] == 'O') {
+                    board[i][j] = playerTwoMark;
+                }
+            }
+        }
+    }
 
-    public static void printBoard(char[][] board) {
-        System.out.println(board[0][0] + "|" + board[0][1] + "|" + board[0][2]);
+    private static char[][] copyBoard(char[][] original) {
+        char[][] copyBoard = new char[original.length][];
+        for (int i = 0; i < original.length; i++) {
+            copyBoard[i] = Arrays.copyOf(original[i], original[i].length);
+        }
+        return copyBoard;
+    }
+
+    public static void printBoard(char[][] board, char playerOneMark, char playerTwoMark) {
+
+        char[][] copyBoard = copyBoard(board);
+        replaceMarks(copyBoard, playerOneMark, playerTwoMark);
+     
+        System.out.println(copyBoard[0][0] + "|" + copyBoard[0][1] + "|" + copyBoard[0][2]);
         System.out.println("-+-+-");
-        System.out.println(board[1][0] + "|" + board[1][1] + "|" + board[1][2]);
+        System.out.println(copyBoard[1][0] + "|" + copyBoard[1][1] + "|" + copyBoard[1][2]);
         System.out.println("-+-+-");
-        System.out.println(board[2][0] + "|" + board[2][1] + "|" + board[2][2]);
+        System.out.println(copyBoard[2][0] + "|" + copyBoard[2][1] + "|" + copyBoard[2][2]);
     }
 
     public static void resetBoard(char[][] board){
@@ -24,7 +48,7 @@ public class TicTacToe {
         }
     }
 
-    public static void playerTurn(char[][] board, Scanner scanner, char playerSymbol) {
+    public static void playerTurn(char[][] board, Scanner scanner, char playerSymbol, char playerOneMark, char playerTwoMark) {
         String userInput;
         while (true) {
             if (playerSymbol == 'X') {
@@ -36,7 +60,7 @@ public class TicTacToe {
             userInput = scanner.nextLine();
 
             if (!userInput.matches("[1-9]")) {
-                printBoard(board);
+                printBoard(board, playerOneMark, playerTwoMark);
                 System.out.println("That move is invalid! Please choose a number between 1 and 9.");
                 continue;
             }
@@ -74,7 +98,7 @@ public class TicTacToe {
                 }
                 break;
             } else {
-                printBoard(board);
+                printBoard(board, playerOneMark, playerTwoMark);
                 System.out.println(userInput + " is not a valid move. Cell is already taken!");
             }
         }
@@ -120,15 +144,15 @@ public class TicTacToe {
         };
     }
 
-    public static boolean isGameFinished(char[][] board, String playerOneName, String playerTwoName) {
+    public static boolean isGameFinished(char[][] board, String playerOneName, String playerTwoName, char playerOneMark, char playerTwoMark) {
         if (hasPlayerWon(board, 'X')) {
-            printBoard(board);
+            printBoard(board, playerOneMark, playerTwoMark);
             System.out.println(playerOneName + " wins!");
             return true;
         }
 
         if (hasPlayerWon(board, 'O')) {
-            printBoard(board);
+            printBoard(board, playerOneMark, playerTwoMark);
             System.out.println(playerTwoName + " wins!");
             return true;
         }
@@ -141,7 +165,7 @@ public class TicTacToe {
             }
         }
 
-        printBoard(board);
+        printBoard(board, playerOneMark, playerTwoMark);
         System.out.println("The game ended in a tie!");
         return true;
     }
@@ -162,9 +186,31 @@ public class TicTacToe {
         return false;
     }
 
+    public static char getPlayerMark(Scanner scanner, String playerName) {
+        boolean validPlayerMark = false;
+        char playerMark = '␀'; // found this char online and it fits.
+        
+        while(!validPlayerMark) {
+            String playerMarkResponse;
+            System.out.println(playerName + ", what is your player mark? (1 character long and not white space):");
+            playerMarkResponse = scanner.nextLine();
+            
+            if (playerMarkResponse.length() == 1 & !playerMarkResponse.isBlank()) {
+                playerMark = playerMarkResponse.charAt(0);
+                validPlayerMark = true;
+            } else {
+                System.out.println("That is invalid! Please select a different player mark!");
+            }
+        }
+
+        return playerMark;
+    }
+
     public static void gameLoop(char[][] board, Scanner scanner){
         boolean isUserDone = false;
         Integer gameModeInput = 0;
+        char playerOneMark = 'X';
+        char playerTwoMark = 'O';
         
         System.out.println("Welcome to Tic-Tac-Toe!");
 
@@ -186,7 +232,9 @@ public class TicTacToe {
                     }
                 }
             }
-
+            
+            playerOneMark = getPlayerMark(scanner, "Player One");
+            playerTwoMark = getPlayerMark(scanner, "Player Two");
             
             System.out.println("Let's begin!");
 
@@ -195,25 +243,28 @@ public class TicTacToe {
             String playerTwoName = (gameModeInput == 2) ? "Computer" : "Player two";
 
             while(!isGameFinished){
-                printBoard(board);
-                playerTurn(board, scanner, 'X');
+                printBoard(board, playerOneMark, playerTwoMark);
+                playerTurn(board, scanner, 'X', playerOneMark, playerTwoMark);
                 
 
 
-                isGameFinished = isGameFinished(board, playerOneName, playerTwoName);
+                isGameFinished = isGameFinished(board, playerOneName, playerTwoName, playerOneMark, playerTwoMark);
 
 
                 if (!isGameFinished) {
                     if (gameModeInput == 2) {
                         AiTurn(board, 'O');
-                        isGameFinished = isGameFinished(board, playerOneName, playerTwoName);
+                        isGameFinished = isGameFinished(board, playerOneName, playerTwoName, playerOneMark, playerTwoMark);
                     } else {
-                        printBoard(board);
-                        playerTurn(board, scanner, 'O');
-                        isGameFinished = isGameFinished(board, playerOneName, playerTwoName);
+                        printBoard(board, playerOneMark, playerTwoMark);
+                        playerTurn(board, scanner, 'O', playerOneMark, playerTwoMark);
+                        isGameFinished = isGameFinished(board, playerOneName, playerTwoName, playerOneMark, playerTwoMark);
                     }
                 }
             }
+            
+            playerOneMark = 'X';
+            playerTwoMark = 'O';
 
             resetBoard(board);
             int continueInput = 0;

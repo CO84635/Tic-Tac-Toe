@@ -162,19 +162,19 @@ public class TestTicTacToe {
     @Test
     void testIsGameFinishedGameWon() {
         char[][] board = {{'X','X','X'},{'4','5','6'},{'7','8','9'}};
-        assertTrue(ticTacToe.isGameFinished(board, "Player one", "PLayer two"));
+        assertTrue(ticTacToe.isGameFinished(board, "Player one", "Player two", 'X', 'O'));
     }
 
     @Test
     void testIsGameFinishedGameDraw() {
         char[][] board = {{'X','O','X'},{'O','X','O'},{'O','X','O'}};
-        assertTrue(ticTacToe.isGameFinished(board, "Player one", "PLayer two"));
+        assertTrue(ticTacToe.isGameFinished(board, "Player one", "PLayer two", 'X', 'O'));
     }
 
     @Test
     void testTheGameIsContinued() {
         char[][] board = {{'X','2','3'},{'4','5','6'},{'7','8','9'}};
-        assertFalse(ticTacToe.isGameFinished(board, "Player one", "PLayer two"));
+        assertFalse(ticTacToe.isGameFinished(board, "Player one", "PLayer two", 'X', 'O'));
     }
 
 }
